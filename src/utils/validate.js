@@ -3,14 +3,15 @@
 
 async function validateSignUpRequestFields(reqBody) {
     try {
-        const { userName, skills, gitHubLink, bio, password } = reqBody;
-    if(!userName) throw new Error("Username must be defined");
+        const { userName, skills, gitHubLink, bio, password, email } = reqBody;
+    if(!userName) throw new Error('Username must be defined');
     if (!Array.isArray(skills)) {
-        throw new Error("Skills must be an array");
+        throw new Error('Skills must be an array');
       }
-    if(!gitHubLink) throw new Error("Username must be defined");
-    if(!bio) throw new Error("Bio must be defined");
-    if(!password) throw new Error("Password must be defined");
+    if(!gitHubLink) throw new Error('Username must be defined');
+    if(!bio) throw new Error('Bio must be defined');
+    if(!password) throw new Error('Password must be defined');
+    if(!email) throw new Error('Email must be defined');
     } catch (error) {
         console.error(error)
     }
@@ -18,8 +19,8 @@ async function validateSignUpRequestFields(reqBody) {
 async function validateLoginRequestFields(reqBody) {
     try {
         const { userName, password } = reqBody;
-    if(!userName) throw new Error("Username must be defined");
-    if(!password) throw new Error("Password must be defined");
+    if(!userName) throw new Error('Username must be defined');
+    if(!password) throw new Error('Password must be defined');
     } catch (error) {
         console.error(error)
     }

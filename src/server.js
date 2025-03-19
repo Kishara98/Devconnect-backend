@@ -1,9 +1,9 @@
-// index.js
 const express = require('express');
 const { connectMongoDB } = require('./config/mongoDBConnection');
 const { authenticateToken } = require('./middlewares/authenticateToken.js');
-const authController = require('./controllers/authController.js');
 const postController = require('./controllers/postController.js');
+const authRoutes = require('./routes/authRoutes.js');
+const postRoutes = require('./routes/postRoutes.js');
 require('dotenv').config();
 const app = express();
 
@@ -24,5 +24,7 @@ connectMongoDB()
     });
 
 
-app.use('/api/', authController);
-app.use('/api/post', authenticateToken, postController);
+
+app.use('/api/auth', authRoutes);
+
+app.use('/api/post', authenticateToken, postRoutes);

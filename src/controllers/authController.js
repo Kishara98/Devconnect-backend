@@ -1,34 +1,37 @@
-const express = require('express');
-const { validateSignUpRequestFields, validateLoginRequestFields } = require('../utils/validate');
-const { userRegister, userLogin } = require('../services/authService.js');
+const { userRegister, userLogin } = require("../services/authService.js");
+const {
+  validateSignUpRequestFields,
+  validateLoginRequestFields,
+} = require("../utils/validate");
 
-const router = express.Router();
+async function registerUser(req, res) {
+  const body = req.body;
+  validateSignUpRequestFields(body);
 
-router.get('/', (req, res) => {
-    res.status(200).json('Testing..........');
-})
+  const responseObj = await userRegister(body);
+  if (responseObj.status === "success") {
+    return res.status(201).json(responseObj.message);
+  } else {
+    return res.status(500);
+  }
+}
 
-router.post('/signUp', async(req, res) => {
-    const body = req.body;
-    validateSignUpRequestFields(body);
+async function loginUser(req, res) {
+  const body = req.body;
+  validateLoginRequestFields(body);
+
+  const responseObj = await userLogin(req);
+  if (responseObj.status === "success") {
     
-    const responseObj = await userRegister(body);
-    if(responseObj.status === 'success') {
-        res.status(201).json(responseObj.message);
-    } else {
-        res.status(500);
-    }
-})
-router.post('/login', async(req, res) => {
-    const body = req.body;
-    validateLoginRequestFields(body);
+    // headers should append to response with a separate middleware function
+    res.set("Authorization", `Bearer ${responseObj.message.jwtToken}`);
+    return res.status(200).json(responseObj.message);
+  } else {
+    return res.status(responseObj.statusCode).json(responseObj.message);
+  }
+}
 
-    const responseObj = await userLogin(req);
-    if(responseObj.status === 'success') {
-        res.status(200).json(responseObj.message);
-    } else {
-        res.status(responseObj.statusCode).json(responseObj.message);
-    }
-})
-
-module.exports = router;
+module.exports = {
+  registerUser,
+  loginUser
+};
